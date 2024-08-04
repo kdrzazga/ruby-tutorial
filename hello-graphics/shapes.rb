@@ -6,8 +6,10 @@ class TriangleWindow < Gosu::Window
   def initialize
     super 640, 480
     self.caption = "Gosu Triangle Example"
+	@x = 0
 	
 	@font = Gosu::Font.new(30, name: 'res/Bionic City.otf')
+	@image = Gosu::Image.new("res/plane.png")
   end
 
   def draw # this method is continuously called by default
@@ -18,6 +20,17 @@ class TriangleWindow < Gosu::Window
                   50, 150)
 
 	@font.draw_text("Hello Gosu Graphics", 200, 200, 0, 1.0, 1.0, Gosu::Color::CYAN)
+	@image.draw(@x, 300, 0)
+	
+	move_plane()
+  end
+  
+  def move_plane()
+	@x = @x + 1
+	
+	if @x > 630
+		@x = 0
+	end
   end
 
   def draw_triangle(x1, y1, x2, y2, x3, y3)
