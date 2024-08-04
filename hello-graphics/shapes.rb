@@ -1,5 +1,7 @@
 #gem install gosu  (this takes a few minutes)
+#gem install ruby2d
 
+require 'ruby2d'
 require 'gosu'
 
 class TriangleWindow < Gosu::Window
@@ -10,6 +12,8 @@ class TriangleWindow < Gosu::Window
 	
 	@font = Gosu::Font.new(30, name: 'res/Bionic City.otf')
 	@image = Gosu::Image.new("res/plane.png")
+	@sound = Sound.new('res/plane.mp3')
+	@sound.play
   end
 
   def draw # this method is continuously called by default
@@ -21,7 +25,7 @@ class TriangleWindow < Gosu::Window
 
 	@font.draw_text("Hello Gosu Graphics", 200, 200, 0, 1.0, 1.0, Gosu::Color::CYAN)
 	@image.draw(@x, 300, 0)
-	
+
 	move_plane()
   end
   
@@ -30,6 +34,7 @@ class TriangleWindow < Gosu::Window
 	
 	if @x > 630
 		@x = 0
+		@sound.stop
 	end
   end
 
