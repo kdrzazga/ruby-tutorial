@@ -1,0 +1,54 @@
+#gem install gosu  (this takes a few minutes)
+#gem install ruby2d
+
+require 'ruby2d'
+require 'gosu'
+
+class C64Window < Gosu::Window
+
+  def initialize
+    super 800, 600
+    self.caption = "Commodore 64"
+	@border_size = 60
+	@x = 0
+	
+	@font = Gosu::Font.new(30, name: 'res/C64_Pro_Mono-STYLE.ttf')
+	@image = Gosu::Image.new("res/plane.png")
+	@sound = Sound.new('res/ode.mp3')
+	@sound.play
+  end
+
+  def draw # this method is continuously called by default
+	Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 97, 97, 97))
+	Gosu.draw_rect(@border_size, @border_size + 45, self.width - 2*@border_size, self.height - 2*@border_size, Gosu::Color.argb(255, 151, 151, 151))
+
+	@font.draw_text("* C-64 BASIC IMPROVED BY BLACK BOX V.3 *", @border_size, @border_size - 30, 0, 0.56, 0.56, Gosu::Color.argb(255, 151, 151, 151))
+	@font.draw_text("64K RAM SYSTEM   38911   BASIC BYTES FREE", @border_size, @border_size, 0, 0.56, 0.56, Gosu::Color.argb(255, 151, 151, 151))
+	@font.draw_text("READY.", @border_size, @border_size + 3*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	ascii_code = 0x2190
+    unicode_char = [ascii_code].pack('U*') 
+	@font.draw_text(unicode_char + "L", @border_size, @border_size + 4*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	@font.draw_text("PRESS PLAY ON TAPE", @border_size, @border_size + 6*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	@font.draw_text("OK", @border_size, @border_size + 7*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	@font.draw_text("FOUND", @border_size, @border_size + 9*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	@font.draw_text("HEADERTYPE:\t1", @border_size, @border_size + 11*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	@font.draw_text("STARTADDRESS:\t2049", @border_size, @border_size + 13*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	@font.draw_text("ENDADDRESS:\t2050", @border_size, @border_size + 15*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	@font.draw_text("LOADING", @border_size, @border_size + 17*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	@font.draw_text("READY.", @border_size, @border_size + 18*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
+	@image.draw(@x, 300, 0)
+
+	blink_cursor()
+  end
+  
+  def blink_cursor()
+	@x = @x + 1
+	
+	if @x > 630
+		@x = 0
+	end
+  end
+
+end
+
+C64Window.new.show
