@@ -5,12 +5,13 @@ require 'ruby2d'
 require 'gosu'
 
 class C64Window < Gosu::Window
-  LINE_HEIGHT = 21
+  LINE_HEIGHT = 16
+  BORDER_SIZE = 80
+  FONT_WIDTH = 0.52
 
   def initialize
     super 800, 600, fullscreen: true
     self.caption = "Commodore 64"
-    @border_size = 60
     @x = 0
     
     @font = Gosu::Font.new(30, name: 'res/C64_Pro_Mono-STYLE.ttf')
@@ -20,28 +21,28 @@ class C64Window < Gosu::Window
   end
 
   def draw # this method is continuously called by default
-    Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 97, 97, 97))
-    Gosu.draw_rect(@border_size, @border_size + 45, self.width - 2 * @border_size, self.height - 3 * @border_size, Gosu::Color.argb(255, 151, 151, 151))
+    Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 73, 73, 73))
+    Gosu.draw_rect(BORDER_SIZE, BORDER_SIZE + 45, self.width - 2 * BORDER_SIZE, self.height - 3 * BORDER_SIZE, Gosu::Color.argb(255, 151, 151, 151))
     
-    @font.draw_text("* C-64 BASIC IMPROVED BY BLACK BOX V.3 *", @border_size, @border_size - 30, 0, 0.56, 0.56, Gosu::Color.argb(255, 151, 151, 151))
-    @font.draw_text("64K RAM SYSTEM   38911   BASIC BYTES FREE", @border_size, @border_size + 0*LINE_HEIGHT + 12, 0, 0.56, 0.56, Gosu::Color.argb(255, 151, 151, 151))
+    @font.draw_text("* C-64 BASIC IMPROVED BY BLACK BOX V.3 *", BORDER_SIZE, BORDER_SIZE - 30, 0, FONT_WIDTH, 0.56, Gosu::Color.argb(255, 151, 151, 151))
+    @font.draw_text("64K RAM SYSTEM   38911   BASIC BYTES FREE", BORDER_SIZE, BORDER_SIZE + 0*LINE_HEIGHT + 12, 0, FONT_WIDTH, 0.56, Gosu::Color.argb(255, 151, 151, 151))
     
     captions = [
-      ["READY.", 3 * LINE_HEIGHT],
-      [("#{[0x2190].pack('U*')}L"), 4 * LINE_HEIGHT],
-      ["PRESS PLAY ON TAPE", 6 * LINE_HEIGHT],
-      ["OK", 7 * LINE_HEIGHT],
-      ["FOUND", 9 * LINE_HEIGHT],
-      ["HEADERTYPE:   1", 11 * LINE_HEIGHT],
-      ["STARTADDRESS: 2049", 13 * LINE_HEIGHT],
-      ["ENDADDRESS:   2050", 15 * LINE_HEIGHT],
-      ["LOADING", 17 * LINE_HEIGHT],
-      ["READY.", 18 * LINE_HEIGHT],
-      [("#{[0x2190].pack('U*')}NK:R#{[0x256E].pack('U*')}"), 19 * LINE_HEIGHT]
+      ["READY.", 4 * LINE_HEIGHT],
+      [("#{[0x2190].pack('U*')}L"), 5 * LINE_HEIGHT],
+      ["PRESS PLAY ON TAPE", 7 * LINE_HEIGHT],
+      ["OK", 8 * LINE_HEIGHT],
+      ["FOUND ODE TO JOY", 10 * LINE_HEIGHT],
+      ["HEADERTYPE:   1", 12 * LINE_HEIGHT],
+      ["STARTADDRESS: 2049", 14 * LINE_HEIGHT],
+      ["ENDADDRESS:   2050", 16 * LINE_HEIGHT],
+      ["LOADING", 18 * LINE_HEIGHT],
+      ["READY.", 19 * LINE_HEIGHT],
+      [("#{[0x2190].pack('U*')}NK:R#{[0x256E].pack('U*')}"), 20 * LINE_HEIGHT]
     ]
     
     captions.each do |caption, offset|
-      @font.draw_text(caption, @border_size, @border_size + offset, 0, 0.56, 0.56, Gosu::Color::BLACK)
+      @font.draw_text(caption, BORDER_SIZE, BORDER_SIZE + offset, 0, FONT_WIDTH, 0.56, Gosu::Color::BLACK)
     end
     
     @image.draw(@x, 300, 0)
