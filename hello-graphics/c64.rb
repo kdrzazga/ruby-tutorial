@@ -7,7 +7,7 @@ require 'gosu'
 class C64Window < Gosu::Window
 
   def initialize
-    super 800, 600
+    super 800, 600, fullscreen: true
     self.caption = "Commodore 64"
 	@border_size = 60
 	@x = 0
@@ -18,28 +18,34 @@ class C64Window < Gosu::Window
 	@sound.play
   end
 
-  def draw # this method is continuously called by default
-	Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 97, 97, 97))
-	Gosu.draw_rect(@border_size, @border_size + 45, self.width - 2*@border_size, self.height - 2*@border_size, Gosu::Color.argb(255, 151, 151, 151))
+def draw # this method is continuously called by default
+  Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 97, 97, 97))
+  Gosu.draw_rect(@border_size, @border_size + 45, self.width - 2 * @border_size, self.height - 2 * @border_size, Gosu::Color.argb(255, 151, 151, 151))
 
-	@font.draw_text("* C-64 BASIC IMPROVED BY BLACK BOX V.3 *", @border_size, @border_size - 30, 0, 0.56, 0.56, Gosu::Color.argb(255, 151, 151, 151))
-	@font.draw_text("64K RAM SYSTEM   38911   BASIC BYTES FREE", @border_size, @border_size, 0, 0.56, 0.56, Gosu::Color.argb(255, 151, 151, 151))
-	@font.draw_text("READY.", @border_size, @border_size + 3*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	ascii_code = 0x2190
-    unicode_char = [ascii_code].pack('U*') 
-	@font.draw_text(unicode_char + "L", @border_size, @border_size + 4*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	@font.draw_text("PRESS PLAY ON TAPE", @border_size, @border_size + 6*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	@font.draw_text("OK", @border_size, @border_size + 7*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	@font.draw_text("FOUND", @border_size, @border_size + 9*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	@font.draw_text("HEADERTYPE:\t1", @border_size, @border_size + 11*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	@font.draw_text("STARTADDRESS:\t2049", @border_size, @border_size + 13*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	@font.draw_text("ENDADDRESS:\t2050", @border_size, @border_size + 15*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	@font.draw_text("LOADING", @border_size, @border_size + 17*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	@font.draw_text("READY.", @border_size, @border_size + 18*25, 0, 0.56, 0.56, Gosu::Color::BLACK)
-	@image.draw(@x, 300, 0)
+  @font.draw_text("* C-64 BASIC IMPROVED BY BLACK BOX V.3 *", @border_size, @border_size - 30, 0, 0.56, 0.56, Gosu::Color.argb(255, 151, 151, 151))
+  @font.draw_text("64K RAM SYSTEM   38911   BASIC BYTES FREE", @border_size, @border_size + 0*25 + 12, 0, 0.56, 0.56, Gosu::Color.argb(255, 151, 151, 151))
 
-	blink_cursor()
+  captions = [
+    ["READY.", 3 * 25],
+    [("#{[0x2190].pack('U*')}L"), 4 * 25],
+    ["PRESS PLAY ON TAPE", 6 * 25],
+    ["OK", 7 * 25],
+    ["FOUND", 9 * 25],
+    ["HEADERTYPE:   1", 11 * 25],
+    ["STARTADDRESS: 2049", 13 * 25],
+    ["ENDADDRESS:   2050", 15 * 25],
+    ["LOADING", 17 * 25],
+    ["READY.", 18 * 25]
+  ]
+
+  captions.each do |caption, offset|
+    @font.draw_text(caption, @border_size, @border_size + offset, 0, 0.56, 0.56, Gosu::Color::BLACK)
   end
+
+  @image.draw(@x, 300, 0)
+
+  blink_cursor()
+end
   
   def blink_cursor()
 	@x = @x + 1
