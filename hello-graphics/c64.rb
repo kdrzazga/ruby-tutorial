@@ -1,3 +1,6 @@
+#gem install gosu  (this takes a few minutes)
+#gem install ruby2d
+
 require 'ruby2d'
 require 'gosu'
 
@@ -13,7 +16,7 @@ class C64Window < Gosu::Window
     @font = Gosu::Font.new(30, name: 'res/C64_Pro_Mono-STYLE.ttf')
     @image = Gosu::Image.new("res/plane.png")
     @sound = Gosu::Sample.new('res/ode.mp3')
-    @sound.play
+    @sound.play(1, 1, true)
   end
 
   def draw # this method is continuously called by default
@@ -33,7 +36,8 @@ class C64Window < Gosu::Window
       ["STARTADDRESS: 2049", 13 * LINE_HEIGHT],
       ["ENDADDRESS:   2050", 15 * LINE_HEIGHT],
       ["LOADING", 17 * LINE_HEIGHT],
-      ["READY.", 18 * LINE_HEIGHT]
+      ["READY.", 18 * LINE_HEIGHT],
+      [("#{[0x2190].pack('U*')}NK:R#{[0x256E].pack('U*')}"), 19 * LINE_HEIGHT]
     ]
     
     captions.each do |caption, offset|
