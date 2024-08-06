@@ -3,6 +3,7 @@
 
 require 'ruby2d'
 require 'gosu'
+require_relative 'lib/circular_list'
 
 class C64Window < Gosu::Window
   LINE_HEIGHT = 16
@@ -15,7 +16,18 @@ class C64Window < Gosu::Window
     @x = 0
     
     @font = Gosu::Font.new(30, name: 'res/C64_Pro_Mono-STYLE.ttf')
-    @image = Gosu::Image.new("res/plane.png")
+	images = CircularList.new([
+      Gosu::Image.new("res/frames/1.png"),
+      Gosu::Image.new("res/frames/2.png"),
+      Gosu::Image.new("res/frames/3.png"),
+      Gosu::Image.new("res/frames/4.png"),
+      Gosu::Image.new("res/frames/5.png"),
+      Gosu::Image.new("res/frames/6.png"),
+      Gosu::Image.new("res/frames/7.png")
+    ])
+    
+    @image = images.next
+    @images = images
     @sound = Gosu::Sample.new('res/ode.mp3')
     @sound.play(1, 1, true)
   end
@@ -45,7 +57,7 @@ class C64Window < Gosu::Window
       @font.draw_text(caption, BORDER_SIZE, BORDER_SIZE + offset, 0, FONT_WIDTH, 0.56, Gosu::Color::BLACK)
     end
     
-    @image.draw(@x, 300, 0)
+    @image.draw(self.width -  BORDER_SIZE - 80, self.height - 1.5*BORDER_SIZE - 99)
 
     blink_cursor()
   end
@@ -53,8 +65,9 @@ class C64Window < Gosu::Window
   def blink_cursor()
     @x = @x + 1
 
-    if @x > 630
+    if @x > 21
       @x = 0
+	  @image = @images.next
     end
   end
   
