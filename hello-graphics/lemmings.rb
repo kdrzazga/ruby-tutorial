@@ -11,8 +11,7 @@ class GameWindow < Gosu::Window
     super WIDTH, HEIGHT
     self.caption = "Rubbings Game"
     
-    @board = Board.new(64, 48) # 64 tiles wide, 48 tiles high
-	@base = Gosu::Image.new("res/rail.png")
+	@game = Game.new()
   end
 
   def update
@@ -21,15 +20,17 @@ class GameWindow < Gosu::Window
 
   def draw
 	Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 0xaa, 0xaa, 0xaa))
-	@base.draw(0, 450)
-    @board.draw
+	@game.base.draw(0, 450)
+    @game.board.draw
+	img = Gosu::Image.new(@game.lemming.path)
+	img.draw(1, 400)
   end
 
   def button_down(id)
     case id
     when Gosu::MsLeft
       x, y = mouse_x, mouse_y
-      tile_x, tile_y = @board.tile_at(x, y)
+      tile_x, tile_y = @game.board.tile_at(x, y)
       puts "Clicked (#{x}, #{y}) - tile: (#{tile_x}, #{tile_y})"
     end
   end
