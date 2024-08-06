@@ -65,7 +65,7 @@ class C64Window < Gosu::Window
   def blink_cursor()
     @x = @x + 1
 
-    if @x > 21
+    if @x > 13
       @x = 0
 	  @image = @images.next
     end
