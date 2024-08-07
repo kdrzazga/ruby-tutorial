@@ -15,15 +15,19 @@ class GameWindow < Gosu::Window
   end
 
   def update
-    # Update logic can go here if needed
+    @game.step
   end
 
   def draw
 	Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 0xaa, 0xaa, 0xaa))
 	@game.base.draw(0, 450)
     @game.board.draw
-	img = Gosu::Image.new(@game.lemming.path)
-	img.draw(1, 400)
+	img = Gosu::Image.new(@game.lemmings[0].path)
+	@game.lemmings.each do |lemming|
+		board_x, board_y = lemming.position
+		x, y = @game.board.screen_pos(board_x, board_y)
+		img.draw(x, y)
+	end
   end
 
   def button_down(id)
@@ -31,11 +35,26 @@ class GameWindow < Gosu::Window
     when Gosu::MsLeft
       x, y = mouse_x, mouse_y
       tile_x, tile_y = @game.board.tile_at(x, y)
-      puts "Clicked (#{x}, #{y}) - tile: (#{tile_x}, #{tile_y})"
+	  
+	  msg = "Clicked (#{x}, #{y}) - tile: (#{tile_x}, #{tile_y}) "
+	  
+	  focused_lemming = nil
+	  @game.lemmings.each do |lemming|
+		msg += lemming.tile[0].to_s + ", " + lemming.tile[1].to_s
+		if lemming.tile[0] == tile_x and lemming.tile[1] == tile_y
+			msg += " " + lemming.to_string 
+			focused_lemming = lemming
+		end
+	  end
+      puts msg
+	  
+	  if focused_lemming != nil
+		focused_lemming.set_class(LemmingClass::BLOCKER)
+	  end
+	
     end
   end
 end
 
-# Start the game
 window = GameWindow.new
 window.show

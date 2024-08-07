@@ -14,3 +14,7 @@ end
 class Direction < Enum
   define :LEFT, :RIGHT
 end
+
+class LemmingClass < Enum
+  define :WALKER, :BLOCKER, :JUMPER, :BUILDER, :FLOATER
+end
