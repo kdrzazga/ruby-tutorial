@@ -88,10 +88,10 @@ class Lemming
       @path = 'res/lem.png'
     when LemmingClass::BLOCKER
       @path = 'res/blocker.png'
-    when LemmingClass::JUMPER
-      @path = 'res/jumper.png'  # Assuming there's a path for jumper
-    when LemmingClass::FLOATER
-      @path = 'res/floater.png'  # Assuming there's a path for floater
+    #when LemmingClass::JUMPER
+    #  @path = 'res/jumper.png'  # Assuming there's a path for jumper
+    #when LemmingClass::FLOATER
+    #  @path = 'res/floater.png'  # Assuming there's a path for floater
     end
   end
 end
