@@ -22,7 +22,7 @@ class Game
 	
 	def get_stats
 		blocker_count = @lemmings.count { |lemming| lemming.get_class == LemmingClass::BLOCKER }
-walker_count = @lemmings.count { |lemming| lemming.get_class == LemmingClass::WALKER }
+		walker_count = @lemmings.count { |lemming| lemming.get_class == LemmingClass::WALKER }
 
 		[@lemmings.count, walker_count, blocker_count]
 	end
