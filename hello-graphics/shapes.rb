@@ -24,7 +24,7 @@ class TriangleWindow < Gosu::Window
                   50, 150)
 
 	@font.draw_text("Hello Gosu Graphics", 200, 200, 0, 1.0, 1.0, Gosu::Color::CYAN)
-	@image.draw(@x, 300, 0)
+	@image.draw(@x, 300)
 
 	move_plane()
   end
