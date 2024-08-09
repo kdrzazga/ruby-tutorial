@@ -14,7 +14,7 @@ class Game
 		@lemmings.each do |lemming|
 			lemming.move
 			result_string << lemming.to_string + "\t"
-			blocker_lemmings = @lemmings.reject { |l| l.class != LemmingClass::BLOCKER || l == lemming }
+			blocker_lemmings = @lemmings.select { |l| l.class == LemmingClass::BLOCKER || l != lemming }
 			lemming.conditional_border_bounce(11, blocker_lemmings)
 		end
 		#puts result_string

@@ -49,7 +49,11 @@ class GameWindow < Gosu::Window
       puts msg
 	  
 	  if focused_lemming != nil
-		focused_lemming.set_class(LemmingClass::BLOCKER)
+		if focused_lemming.get_class == LemmingClass::WALKER
+			focused_lemming.set_class(LemmingClass::BLOCKER)
+		else
+			focused_lemming.set_class(LemmingClass::WALKER)
+		end
 	  end
 	
     end

@@ -24,7 +24,7 @@ class Lemming
 				end
 			when LemmingClass::BLOCKER
 				@path = 'res/blocker.png'
-				puts "blocker"
+				#puts "blocker"
 			when LemmingClass::JUMPER
 				puts "jumper"
 			when LemmingClass::FLOATER
@@ -39,7 +39,7 @@ class Lemming
 		x = self.tile[0]
 		
 		blocker_lemmings.each do |blocker|
-			if blocker.tile[0] == tile[0]
+			if blocker.get_class == LemmingClass::BLOCKER and blocker.tile[0] == tile[0]
 				@x -= 2*@speed
 				@speed = -@speed
 				break
@@ -64,8 +64,12 @@ class Lemming
 	end
 	
 	def to_string
-		"Lemming #{@id} [#{@x.floor}, #{@y.floor}]"
+		"Lemming #{@id} #{@class} [#{@x.floor}, #{@y.floor}]"
 	end
+	
+  def get_class()
+	@class
+  end
 
   def set_class(new_class)
     if valid_class?(new_class)
@@ -75,8 +79,6 @@ class Lemming
       puts "Invalid class: #{new_class}"
     end
   end
-
-  private
 
   def valid_class?(cl)
     [LemmingClass::WALKER, LemmingClass::BLOCKER, LemmingClass::JUMPER, LemmingClass::FLOATER].include?(cl)
