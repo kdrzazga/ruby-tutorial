@@ -18,6 +18,7 @@ class Amiga < Gosu::Window
     
     @phase = 1
     @font = Gosu::Font.new(30, name: 'res/Topaz_a500_v1.0.ttf')
+	@cursor_image = Gosu::Image.new("res/cursor.png")
     @time_elapsed = 0
     @color_index = 0
   end
@@ -61,11 +62,26 @@ class Amiga < Gosu::Window
   end
   
   def phase2_draw
-    Gosu.draw_rect(0, 0, self.width, self.height, COLORS[2])
-    Gosu.draw_line(1, 1, Gosu::Color::WHITE, self.width, 1, Gosu::Color::WHITE)
-    Gosu.draw_line(self.width, 1, Gosu::Color::WHITE, self.width, 2 * self.height / 3, Gosu::Color::WHITE)
-    Gosu.draw_line(self.width, 2 * self.height / 3, Gosu::Color::WHITE, 1, 2 * self.height / 3, Gosu::Color::WHITE)
-  end  # End of phase2_draw method
+    Gosu.draw_rect(0, 0, self.width - 1, self.height, COLORS[2])
+	window_rect
+	@cursor_image.draw(2, 2, 0)
+    @font.draw_text("AmigaDOS", 1, 1, 0, 0.5, 0.56, Gosu::Color::BLACK)
+  end
+
+  def window_rect
+    for i in 1..3
+		Gosu.draw_line(i, i, Gosu::Color::WHITE, self.width - 1, i, Gosu::Color::WHITE)
+		window_header
+		Gosu.draw_line(self.width - i, i, Gosu::Color::WHITE, self.width - i, *(2 * self.height / 3).floor - i, Gosu::Color::WHITE)
+		Gosu.draw_line(self.width - i, (2 * self.height / 3).floor, Gosu::Color::WHITE, i, (2 * self.height / 3).floor - i, Gosu::Color::WHITE)
+		Gosu.draw_line(0, 0, Gosu::Color::WHITE, i, (2 * self.height / 3).floor - i, Gosu::Color::WHITE)
+	end
+  end
+  
+  def window_header
+	Gosu.draw_rect(1, 1, 6, 6, COLORS[2], z = 0)
+	
+  end
 
 end
 
