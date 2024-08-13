@@ -13,7 +13,7 @@ class Amiga < Gosu::Window
 
   def initialize
     puts "Elapsed time #{Gosu.milliseconds}"
-    super 800, 600, fullscreen: true
+    super 640, 400, fullscreen: true
     self.caption = "Amiga 500"
     
     @phase = 1
