@@ -29,6 +29,7 @@ class C64Window < Gosu::Window
 
     # Start time tracking for captions
     @start_time = Gosu.milliseconds
+	@display_header = true
     @display_captions = {
       captions1: true,
       captions2: false,
@@ -37,22 +38,76 @@ class C64Window < Gosu::Window
     
     @display_animation = false
     @music_playing = false
+	@display_head_fit = false
   end
 
   def draw
-    Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 73, 73, 73))
-    Gosu.draw_rect(BORDER_SIZE, BORDER_SIZE + 45, self.width - 2 * BORDER_SIZE, self.height - 3 * BORDER_SIZE, Gosu::Color.argb(255, 151, 151, 151))
-    
-    @font.draw_text("* C-64 BASIC IMPROVED BY BLACK BOX V.3 *", BORDER_SIZE, BORDER_SIZE - 30, 0, FONT_WIDTH, 0.56, Gosu::Color.argb(255, 151, 151, 151))
-    @font.draw_text("64K RAM SYSTEM   38911   BASIC BYTES FREE", BORDER_SIZE, BORDER_SIZE + 0 * LINE_HEIGHT + 12, 0, FONT_WIDTH, 0.56, Gosu::Color.argb(255, 151, 151, 151))
-    
+    display_black_box_header
     display_flags_drawing
+	display_head_fit_drawing
+  end
+  
+  def update
+    close if Gosu.button_down?(Gosu::KbEscape)
+
+    elapsed_time = (Gosu.milliseconds - @start_time) / 1000.0
+
+    @display_captions[:captions2] = true if elapsed_time >= 1 && !@display_captions[:captions2]
+    @display_captions[:captions3] = true if elapsed_time >= 3 && !@display_captions[:captions3]
+    @display_animation = true if elapsed_time >= 4 && @display_captions[:captions3]
+   
+    if elapsed_time >= 4 && !@music_playing
+      @sound.play(1, 1, true)
+      @music_playing = true
+    end
+	
+	if elapsed_time >= 47
+		@display_captions = {
+				captions1: false,
+				captions2: false,
+				captions3: false
+		}
+		@display_header = false
+		@display_head_fit = true
+	end
+  end
+  
+  def display_black_box_header
+	if @display_header == true
+		Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 73, 73, 73))
+		Gosu.draw_rect(BORDER_SIZE, BORDER_SIZE + 45, self.width - 2 * BORDER_SIZE, self.height - 3 * BORDER_SIZE, Gosu::Color.argb(255, 151, 151, 151))
+		
+		@font.draw_text("* C-64 BASIC IMPROVED BY BLACK BOX V.3 *", BORDER_SIZE, BORDER_SIZE - 30, 0, FONT_WIDTH, 0.56, Gosu::Color.argb(255, 151, 151, 151))
+		@font.draw_text("64K RAM SYSTEM   38911   BASIC BYTES FREE", BORDER_SIZE, BORDER_SIZE + 0 * LINE_HEIGHT + 12, 0, FONT_WIDTH, 0.56, Gosu::Color.argb(255, 151, 151, 151))
+	end
   end
   
   def display_flags_drawing
     draw_captions if @display_captions
     @image.draw(self.width -  BORDER_SIZE - 80, self.height - 1.5 * BORDER_SIZE - 99) if @display_animation
     animate_piano() if @display_animation
+  end
+  
+  def display_head_fit_drawing
+	
+	if @display_head_fit
+		hf_captions = [
+		["              F1 - normal mode", 6 * LINE_HEIGHT],
+		["              F3 - turbo mode", 9 * LINE_HEIGHT],
+		["               RETURN - quit", 12 * LINE_HEIGHT],
+		]
+		Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 220, 119, 125))
+		Gosu.draw_rect(BORDER_SIZE, BORDER_SIZE, self.width - 2 * BORDER_SIZE, self.height * 0.5, Gosu::Color.argb(255, 73, 73, 73))
+		
+		Gosu.draw_rect(BORDER_SIZE + 14*LINE_HEIGHT, BORDER_SIZE + 1*LINE_HEIGHT, 14*LINE_HEIGHT - 5, LINE_HEIGHT, Gosu::Color::WHITE)
+		@font.draw_text("* HEAD FIT *", BORDER_SIZE + 15*LINE_HEIGHT, BORDER_SIZE + LINE_HEIGHT, 0, FONT_WIDTH, 0.56, Gosu::Color.argb(255, 73, 73, 73))
+		hf_captions.each { |caption, offset| @font.draw_text(caption, BORDER_SIZE, BORDER_SIZE + offset, 0, FONT_WIDTH, 0.56, Gosu::Color::WHITE)}
+	end
+	
+	if @display_animation
+		@image.draw(self.width -  BORDER_SIZE - 80, self.height - 1.5 * BORDER_SIZE - 99)
+		animate_piano()
+	end
   end
 
   def draw_captions
@@ -93,21 +148,7 @@ class C64Window < Gosu::Window
       @image = @images.next
     end
   end
-  
-  def update
-    close if Gosu.button_down?(Gosu::KbEscape)
 
-    elapsed_time = (Gosu.milliseconds - @start_time) / 1000.0
-
-    @display_captions[:captions2] = true if elapsed_time >= 1 && !@display_captions[:captions2]
-    @display_captions[:captions3] = true if elapsed_time >= 3 && !@display_captions[:captions3]
-    @display_animation = true if elapsed_time >= 4 && @display_captions[:captions3]
-    
-    if elapsed_time >= 4 && !@music_playing
-      @sound.play(1, 1, true)
-      @music_playing = true
-    end
-  end
 end
 
 C64Window.new.show
