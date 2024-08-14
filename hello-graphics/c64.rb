@@ -25,7 +25,7 @@ class C64Window < Gosu::Window
     
     @image = images.next
     @images = images
-    @sound = Gosu::Sample.new('res/ode.mp3')
+    @sound = Gosu::Song.new('res/ode.mp3')
 
     # Start time tracking for captions
     @start_time = Gosu.milliseconds
@@ -36,7 +36,7 @@ class C64Window < Gosu::Window
       captions3: false
     }
     
-    @display_animation = false
+    @display_piano_animation = false
     @music_playing = false
 	@display_head_fit = false
   end
@@ -54,10 +54,10 @@ class C64Window < Gosu::Window
 
     @display_captions[:captions2] = true if elapsed_time >= 1 && !@display_captions[:captions2]
     @display_captions[:captions3] = true if elapsed_time >= 3 && !@display_captions[:captions3]
-    @display_animation = true if elapsed_time >= 4 && @display_captions[:captions3]
+    @display_piano_animation = true if elapsed_time >= 4 && @display_captions[:captions3]
    
     if elapsed_time >= 4 && !@music_playing
-      @sound.play(1, 1, true)
+      @sound.play(true)
       @music_playing = true
     end
 	
@@ -70,6 +70,29 @@ class C64Window < Gosu::Window
 		@display_header = false
 		@display_head_fit = true
 	end
+	
+	if elapsed_time >= 6 && elapsed_time <= 120 + 57
+	    @restart_flag = true
+		@restart_time = Gosu.milliseconds		
+	end
+	
+	if elapsed_time >= 120 + 47
+		@sound.pause if @music_playing
+		@display_piano_animation = false
+	end
+		
+	if @restart_flag
+		@music_playing = false
+		t = (Gosu.milliseconds - @restart_time) / 1000.0
+		if t >= 1
+			restart_program
+		end
+	end
+end
+  
+  def restart_program
+	puts "Restart..."
+	exec('ruby', $PROGRAM_NAME, *ARGV) # Restart the current script
   end
   
   def display_black_box_header
@@ -84,19 +107,25 @@ class C64Window < Gosu::Window
   
   def display_flags_drawing
     draw_captions if @display_captions
-    @image.draw(self.width -  BORDER_SIZE - 80, self.height - 1.5 * BORDER_SIZE - 99) if @display_animation
-    animate_piano() if @display_animation
+    @image.draw(self.width - BORDER_SIZE - 80, self.height - 1.5 * BORDER_SIZE - 99) if @display_piano_animation
+    animate_piano() if @display_piano_animation
   end
   
   def display_head_fit_drawing
 	
 	if @display_head_fit
 		hf_captions = [
-		["              F1 - normal mode", 6 * LINE_HEIGHT],
-		["              F3 - turbo mode", 9 * LINE_HEIGHT],
-		["               RETURN - quit", 12 * LINE_HEIGHT],
+			["              F1 - normal mode", 6 * LINE_HEIGHT],
+			["              F3 - turbo mode", 9 * LINE_HEIGHT],
+			["               RETURN - quit", 12 * LINE_HEIGHT]
 		]
 		Gosu.draw_rect(0, 0, self.width, self.height, Gosu::Color.argb(255, 220, 119, 125))
+		for x in 1..4
+			Gosu.draw_rect(1.6*BORDER_SIZE + (6 + 2.2*x)*LINE_HEIGHT, self.height * 0.5 - 5, 4, self.height * 0.5 - BORDER_SIZE, Gosu::Color::BLACK)
+		end
+		for x in 6..7
+			Gosu.draw_rect(1.6*BORDER_SIZE + (5 + 2.3*x)*LINE_HEIGHT, self.height * 0.5 - 5, 4, self.height * 0.5 - BORDER_SIZE, Gosu::Color::BLACK)
+		end
 		Gosu.draw_rect(BORDER_SIZE, BORDER_SIZE, self.width - 2 * BORDER_SIZE, self.height * 0.5, Gosu::Color.argb(255, 73, 73, 73))
 		
 		Gosu.draw_rect(BORDER_SIZE + 14*LINE_HEIGHT, BORDER_SIZE + 1*LINE_HEIGHT, 14*LINE_HEIGHT - 5, LINE_HEIGHT, Gosu::Color::WHITE)
@@ -104,7 +133,7 @@ class C64Window < Gosu::Window
 		hf_captions.each { |caption, offset| @font.draw_text(caption, BORDER_SIZE, BORDER_SIZE + offset, 0, FONT_WIDTH, 0.56, Gosu::Color::WHITE)}
 	end
 	
-	if @display_animation
+	if @display_piano_animation
 		@image.draw(self.width -  BORDER_SIZE - 80, self.height - 1.5 * BORDER_SIZE - 99)
 		animate_piano()
 	end
