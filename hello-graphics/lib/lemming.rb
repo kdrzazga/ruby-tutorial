@@ -6,9 +6,12 @@ class Lemming
 	def initialize(x, y)
 		@x = x
 		@y = y
+		@top_jump = y - 1
+		@bottom_jump = y
 		@direction = Direction::RIGHT
 		@class = LemmingClass::WALKER
 		@speed = 0.02
+		@speed_y = -0.02
 		@path = 'res/lem.png'
 		Lemming::LEMMINGS_COUNT += 1
 		@id = LEMMINGS_COUNT
@@ -25,8 +28,24 @@ class Lemming
 			when LemmingClass::BLOCKER
 				@path = 'res/blocker.png'
 				#puts "blocker"
+
 			when LemmingClass::JUMPER
+				@x += @speed
+				
+				@y += @speed_y
+				
+				if @y <= @top_jump
+					@speed_y = -@speed_y
+				end
+				
+				if @y > @bottom_jump
+					@y = @bottom_jump
+					@speed_y = -0.02
+					@class = LemmingClass::WALKER
+				end
+				
 				puts "jumper"
+				
 			when LemmingClass::FLOATER
 				puts "floater"
 			else
@@ -39,7 +58,7 @@ class Lemming
 		x = self.tile[0]
 		
 		blocker_lemmings.each do |blocker|
-			if blocker.get_class == LemmingClass::BLOCKER and blocker.tile[0] == tile[0]
+			if blocker.get_class == LemmingClass::BLOCKER and blocker.tile[0] == tile[0] and blocker.tile[1] == tile[1]
 				@x -= 2*@speed
 				@speed = -@speed
 				break
