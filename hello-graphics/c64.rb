@@ -68,7 +68,7 @@ class C64Window < Gosu::Window
       @music_playing = true
     end
 	
-	if elapsed_time >= 47
+	if elapsed_time >= 2*47 -4
 		@display_captions = {
 				captions1: false,
 				captions2: false,
@@ -79,12 +79,12 @@ class C64Window < Gosu::Window
 		@bar.move()
 	end
 	
-	if elapsed_time >= 6 && elapsed_time <= 120 + 57
+	if elapsed_time >= 6 && elapsed_time <= 120 + 52+3
 	    @restart_flag = true
 		@restart_time = Gosu.milliseconds		
 	end
 	
-	if elapsed_time >= 120 + 47
+	if elapsed_time >= 120 + 2*47
 		@sound.pause if @music_playing
 		@display_piano_animation = false
 	end
