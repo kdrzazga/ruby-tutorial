@@ -8,7 +8,7 @@ class ScrollingBitmapWindow < Gosu::Window
     self.caption = "Scrolling Bitmap Animation"
 	bitmap = Gosu::Image.new("res/bitmap.png")
 	@bar = Bars.new(bitmap, 150, 200)
-	@bars_grapher = BarsGrapher.new(@bar)
+	@bars_grapher = BarsGrapher.new(@bar, 0)
 	
     @viewport_height = 15
   end

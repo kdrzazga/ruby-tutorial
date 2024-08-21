@@ -1,5 +1,7 @@
 require 'ruby2d'
 require 'gosu'
+require_relative 'lib/bars/bars'
+require_relative 'lib/bars/grapher'
 require_relative 'lib/circular_list'
 
 class C64Window < Gosu::Window
@@ -39,6 +41,11 @@ class C64Window < Gosu::Window
     @display_piano_animation = false
     @music_playing = false
 	@display_head_fit = false
+		
+	bitmap = Gosu::Image.new("res/bitmap.png")
+	@bar = Bars.new(bitmap, 190, 240)
+	@bars_grapher = BarsGrapher.new(@bar, 370)
+	@viewport_height = 15
   end
 
   def draw
@@ -69,6 +76,7 @@ class C64Window < Gosu::Window
 		}
 		@display_header = false
 		@display_head_fit = true
+		@bar.move()
 	end
 	
 	if elapsed_time >= 6 && elapsed_time <= 120 + 57
@@ -126,6 +134,9 @@ end
 		for x in 6..7
 			Gosu.draw_rect(1.6*BORDER_SIZE + (5 + 2.3*x)*LINE_HEIGHT, self.height * 0.5 - 5, 4, self.height * 0.5 - BORDER_SIZE, Gosu::Color::BLACK)
 		end
+		
+		@bars_grapher.draw2()
+
 		Gosu.draw_rect(BORDER_SIZE, BORDER_SIZE, self.width - 2 * BORDER_SIZE, self.height * 0.5, Gosu::Color.argb(255, 73, 73, 73))
 		
 		Gosu.draw_rect(BORDER_SIZE + 14*LINE_HEIGHT, BORDER_SIZE + 1*LINE_HEIGHT, 14*LINE_HEIGHT - 5, LINE_HEIGHT, Gosu::Color::WHITE)

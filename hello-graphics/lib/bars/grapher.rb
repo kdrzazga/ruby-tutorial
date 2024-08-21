@@ -1,6 +1,7 @@
 class BarsGrapher
-  def initialize(bar)
+  def initialize(bar, y)
 	@bar = bar
+	@y = y
   end
  
   def draw1
@@ -16,11 +17,11 @@ class BarsGrapher
   private
 
   def draw_bitmap_section1(offset_y)
-    @bar.bitmap.draw(@bar.x_offset1, offset_y, 0)
+    @bar.bitmap.draw(@bar.x_offset1, @y + offset_y, 0)
   end 
  
   def draw_bitmap_section2(offset_y)
-    @bar.bitmap.draw(@bar.x_offset1, offset_y, 0)
-    @bar.bitmap.draw(@bar.x_offset2, offset_y, 0)
+    @bar.bitmap.draw(@bar.x_offset1, @y + offset_y, 0)
+    @bar.bitmap.draw(@bar.x_offset2, @y + offset_y, 0)
   end
 end
